@@ -1,5 +1,5 @@
 
-# Velodyne_VLP-16-Sensor, Point-cloud creator.
+# Velodyne VLP-16-Sensor, Point-cloud creator.
 ## this assignment was coded, edited and solved by:
 ### 1.**Bar Ben Amo.**
 ### 2.**Gilad Klos.**
