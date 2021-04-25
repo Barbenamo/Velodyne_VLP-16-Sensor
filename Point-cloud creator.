@@ -1,8 +1,8 @@
-clc
-clear all
 % Date: 20/04/2021.
 % This script creates a 3D point cloud from the Velodyne VLP-16 output
 % data.
+clc
+clear all
 PointCloud=[];
 index=1;
 load 'VELODATA.mat';
