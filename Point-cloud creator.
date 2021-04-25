@@ -1,33 +1,39 @@
 clc
+clear all
 % Date: 20/04/2021.
 % This script creates a 3D point cloud from the Velodyne VLP-16 output
 % data.
-
+PointCloud=[];
+index=1;
 load 'VELODATA.mat';
-% divide the data to the interest region.
 A=ALL_DATA(:,:);
-%A=transpose(A);
-n1=0;
-n2=0;
 v=[];
 w=[-15,1,-13,3,-11,5,-9,7,-7,9,-5,11,-3,13,-1,15]; %vertical angles.
 w=(pi/180).*w;%convert to radian.
 for i=1:150
- for j=1:1200
+ for j=1:99:size(A)
      if A(j,i)==255 && A(j+1,i)==238
         v=A(j+2:j+99,i);
         [Az,DV]=VectorProcess(v);
         for k=1:32
          Point=Create3Dpoint(Az,DV(k),mod(k,16),w);
-         hold on
-         plot3(Point(1),Point(2),Point(3),'.');
+         for a=1:3
+         PointCloud(index,a)=Point(a);
+         end
+         index=index+1;
         end
-        hold off
      end
  end    
 end
-
-
+ figure(1)
+ plot3(PointCloud(:,1),PointCloud(:,2),PointCloud(:,3),'.');
+ title('Velodyne output map')
+ axis equal
+ xlabel('x[m]')
+ ylabel('y[m]')
+ zlabel('z[m]')
+ grid on 
+ 
 function [Az,DirectionVector]=VectorProcess(v)
  Az=CreateAzimuth(v(1),v(2));
  DirectionVector=0;
