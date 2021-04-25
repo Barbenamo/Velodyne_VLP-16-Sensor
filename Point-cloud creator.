@@ -1,4 +1,4 @@
-% Authors: Bar Ben Amo & Gilad Klos.
+clc
 % Date: 20/04/2021.
 % This script creates a 3D point cloud from the Velodyne VLP-16 output
 % data.
@@ -16,19 +16,19 @@ for i=1:150
  for j=1:1200
      if A(j,i)==255 && A(j+1,i)==238
         v=A(j+2:j+99,i);
+        [Az,DV]=VectorProcess(v);
+        for k=1:32
+         Point=Create3Dpoint(Az,DV(k),mod(k,16),w);
+         hold on
+         plot3(Point(1),Point(2),Point(3),'.');
+        end
+        hold off
      end
- 
-  
-%      if A(j,i)==238   
-%        v=A(j+1:j+98,i)
-%      end
- end 
-     
+ end    
 end
-VectorProcess(v,w);
 
 
-function []=VectorProcess(v,w)
+function [Az,DirectionVector]=VectorProcess(v)
  Az=CreateAzimuth(v(1),v(2));
  DirectionVector=0;
  k=1;
@@ -41,30 +41,21 @@ function []=VectorProcess(v,w)
     k=k+1;
     end
  end
- 
- for i=1:size(DirectionVector)
-     num=mod(i,16);
-     direction=DirectionVector(i);
-     point=Create3Dpoint(Az,direction,num,w)
- end
- 
 end
-
 
 % A method to create a 3D point from the azimuth, direction.
 function[Point]=Create3Dpoint(Az,direction,num,w)
- phi=w(num);
+ phi=w(num+1);
  x=direction*cos(phi)*sin(Az);
  y=direction*cos(phi)*cos(Az);
  z=direction*sin(phi);
  Point=[x,y,z];
 end
-
 % A method to create location based on the data-sheet formula
 function[loc]=CreateLocation(n1,n2)
- loc=(n2*256+n1)*2;
+ loc=(n2*256+n1)*0.002;
 end
 % A method to create azimuth based on the data-sheet formula
 function[az]=CreateAzimuth(n1,n2)
- az=(n2*256+n1)/100;
+ az=(n2*256+n1)*(pi/180)/100;
 end
